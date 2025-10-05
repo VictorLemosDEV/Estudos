@@ -9,6 +9,9 @@
 - **`vector.py`**  
     Implementação de uma classe para vetores bidimensionais (`Vector`).  
     Inclui métodos para operações matemáticas e utilitárias.
+- **`linked_list.py`**  
+    Implementação de uma lista encadeada (`LinkedList`).  
+    Inclui métodos para manipulação dinâmica de elementos.
 
 ---
 
@@ -22,6 +25,12 @@
   Cálculo de módulo, normalização, comparação, etc.
 - [ ] **Produto vetorial:**  
   Em desenvolvimento.
+
+
+- [x] **Lista encadeada:**  
+  Inserção, remoção, busca e iteração de elementos na lista encadeada.
+- [X] **Outras operações de lista:**  
+  Verificação de tamanho, limpeza da lista, conversão para lista buit-in.
 
 ---
 
