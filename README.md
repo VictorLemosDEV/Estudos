@@ -1,3 +1,18 @@
-# Repositório Geral de Anotações das matérias de Ciência da Computação
+# 📚 Repositório Geral de Anotações  
+Anotações das matérias do curso de **Ciência da Computação**.
 
-## Semestre atual: 2º
+---
+
+## 📅 Organização por Semestre
+
+### 2º Semestre
+**Conteúdos Principais:**
+- Engenharia de Software I
+- Arquitetura de Sistemas Operacionais
+- Sistemas Embarcados
+- Geometria Analítica e Algebra Linear
+
+
+---
+
+> Este repositório serve para centralizar e organizar os estudos ao longo da graduação.
