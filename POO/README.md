@@ -12,6 +12,9 @@
 - **`linked_list.py`**  
     Implementação de uma lista encadeada (`LinkedList`).  
     Inclui métodos para manipulação dinâmica de elementos.
+- **`sistemaentrega.py`**
+  Implementação de um sistema simples de pedidos e entregas (classes `Pedido`, `Entregador`, `SistemaEntregas`).
+  Documentação e exemplos em `POO/sistema_entregas.md`.
 
 ---
 
