@@ -57,4 +57,4 @@ class Vector:
     
 
 
-        return NotImplemented
+       
