@@ -95,6 +95,9 @@ class Dice:
     
     def min_result(self) -> int:
         if self.parts != None:
+            if self.parts["advantage"]:
+                return 1 + self.parts["bonus"]
+
             # A soma dos valores mínimos (1) de cada dado, mais o bônus.
             return (1 * self.parts["times"]) + self.parts["bonus"]
         else:
@@ -102,6 +105,9 @@ class Dice:
         
     def max_result(self) -> int:
         if self.parts != None:
+            if self.parts["advantage"]:
+                return (self.parts["sides"]) + self.parts["bonus"]
+            
             return (self.parts["times"] * self.parts["sides"]) + self.parts["bonus"]
         else:
             raise ValueError("Dado é inválido.")
