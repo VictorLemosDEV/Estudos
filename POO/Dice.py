@@ -1,9 +1,14 @@
+from __future__ import annotations
+
 import re
-from typing import Union, TypeAlias, Dict
+from dataclasses import dataclass
+from typing import Union, TypeAlias, Dict, List
 from random import randint
 
 
+
 DiceParts: TypeAlias = Dict[str, int]
+
 
 
 class Dice:
@@ -62,7 +67,7 @@ class Dice:
             "advantage": 1 if parts["advantage"] else 0
         }
     
-    def roll(self) -> int:
+    def roll(self) -> 'RollResult':
         """
         Executa a rolagem do dado de acordo com sua notação.
         
@@ -79,18 +84,34 @@ class Dice:
         advantage = self.parts["advantage"]
 
         rolls = [randint(1, sides) for _ in range(times)]
+        main_value = max(rolls) if advantage else sum(rolls)
 
-        if advantage:
-            # Pega o maior resultado se for uma rolagem com vantagem
-            return max(rolls) + bonus
+        return RollResult(
+        total=main_value + bonus,
+        rolls=rolls,
+        bonus=bonus,
+        dice_used=self
+    )
+    
+    def min_result(self) -> int:
+        if self.parts != None:
+            # A soma dos valores mínimos (1) de cada dado, mais o bônus.
+            return (1 * self.parts["times"]) + self.parts["bonus"]
         else:
-            # Soma todos os resultados
-            return sum(rolls) + bonus
+            raise ValueError("Dado é inválido.")
+        
+    def max_result(self) -> int:
+        if self.parts != None:
+            return (self.parts["times"] * self.parts["sides"]) + self.parts["bonus"]
+        else:
+            raise ValueError("Dado é inválido.")
+        
+
         
     
     # --- Métodos mágicos ---
 
-    def __call__(self) -> int:
+    def __call__(self) -> 'RollResult':
         """Permite chamar o objeto como uma função para rolar o dado. Ex: d20()"""
         return self.roll()
     
@@ -112,7 +133,69 @@ class Dice:
             sign = "+" if new_bonus >= 0 else ""
             return Dice(f"{self.parts["times"]}d{self.parts["sides"]}{sign}{new_bonus}")
         return NotImplemented
+
+
+@dataclass(frozen=True)
+class RollResult:
+    total: int
+    rolls: List[int]
+    bonus: int
+    dice_used: Dice
+
+    def was_critical(self) -> bool:
+        """Verifica se foi um acerto crítico (20 natural em um d20)."""
+        if self.dice_used.parts != None:
+            return len(self.rolls) == 1 and self.rolls[0] == 20 and self.dice_used.parts["sides"] == 20
+        else:
+            raise ValueError(f"Dice is invalid: '{self.dice_used}'")
+        
+    def was_critical_failure(self) -> bool:
+        """Verifica se foi uma falha crítica (1 natural em um d20)."""
+        if self.dice_used.parts != None:
+            return len(self.rolls) == 1 and self.rolls[0] == 1 and self.dice_used.parts["sides"] == 20
+        else:
+            raise ValueError(f"Dice is invalid: '{self.dice_used}'")
+        
+    def __str__(self) -> str:
+        rolagens_str = " + ".join(map(str, self.rolls))
+        bonus_str = ""
+        if self.bonus > 0:
+            bonus_str = f" + {self.bonus}"
+        elif self.bonus < 0:
+            # Garante o espaçamento correto para bônus negativos
+            bonus_str = f" - {abs(self.bonus)}"
+        
+        return f"({rolagens_str}){bonus_str} = {self.total}"
     
+    def __eq__(self, other) -> bool:
+        if isinstance(other, RollResult):
+            return self.total == other.total
+        return self.total == other
+    
+    def __lt__(self, other) -> bool:
+        if isinstance(other, RollResult):
+            return self.total < other.total
+        return self.total < other
+    
+    def __gt__(self,other) -> bool:
+        if isinstance(other, RollResult):
+            return self.total > other.total
+        return self.total > other
+    
+    def __le__(self, other) -> bool:
+        if isinstance(other, RollResult):
+            return self.total <= other.total
+        return self.total <= other
+    
+    def __ge__(self, other) -> bool:
+        if isinstance(other, RollResult):
+            return self.total >= other.total
+        return self.total >= other
+      
+
+
+       
+
 
 
 # --- Exemplo de Uso ---
@@ -131,6 +214,19 @@ if __name__ == "__main__":
 
     d20_com_magia = Dice("1d20") + 4
     print(f"Um d20 com bônus mágico ({d20_com_magia}): {d20_com_magia()}")
+
+    ataque = Dice("1d20+5")
+    defesa_do_monstro = 15
+
+    resultado_ataque = ataque() # Usando __call__
+    print(f"Você rolou um ataque: {resultado_ataque}")
+
+    if resultado_ataque.was_critical():
+        print("ACERTO CRÍTICO!")
+    elif resultado_ataque >= defesa_do_monstro:
+        print("Você acertou o monstro!")
+    else:
+        print("Você errou...")
         
 
     
