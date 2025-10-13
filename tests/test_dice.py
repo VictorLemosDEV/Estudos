@@ -7,7 +7,8 @@ CASOS_DE_TESTE = [
     ("1d6", 1, 6),
     ("2d8+2", 4, 18),
     ("3d10-1", 2, 29),
-    ("#2d20", 1, 20) # Vantagem não muda min/max
+    ("#2d20", 1, 20), # Vantagem não muda min/max
+    ("#10d45+50", 51, 95)
 ]
 
 # Teste 1: Verifica a criação de um dado simples e seus limites
