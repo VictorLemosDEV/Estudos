@@ -62,10 +62,72 @@ S_heal_potion = Item(
     "Poção pequena de cura", .3 , None, "Oferece cura baixa porem rápida"   
 )
 M_heal_potion = Item(
-    "Meida poção de cura", .35 , None, "Oferece cura média"   
+    "Media poção de cura", .35 , None, "Oferece cura média"   
 )
 L_heal_potion = Item(
-    "Poção pequena de cura", .4 , None, "Oferece grande taxa de cura porem lenta de consumir"   
+    "Poção grande de cura", .4 , None, "Oferece grande taxa de cura porem lenta de consumir"   
 )
+    #speed
+S_speed_potion = Item(
+    "Poção pequena de velocidade", .3 , None, "Pequeno buff de velocidade"   
+)
+M_speed_potion = Item(
+    "Media poção de velocidade", .35 , None, "Médio buff de velocidade"   
+)
+L_speed_potion = Item(
+    "Poção grande de velocidade", .4 , None, "Oferece grande buff de velocidade porem lenta de consumir"   
+)
+    #damage
+S_damage_potion = Item(
+    "Poção pequena de dano", .3 , None, "Pequeno buff de dano"   
+)
+M_damage_potion = Item(
+    "Media poção de dano", .35 , None, "Médio buff de dano"   
+)
+L_damage_potion = Item(
+    "Poção grande de dano", .4 , None, "Oferece grande buff de dano porem lenta de consumir"   
+)
+    #defense
+S_defense_potion = Item(
+    "Poção pequena de defesa", .3 , None, "Pequeno buff de defesa"   
+)
+M_defense_potion = Item(
+    "Media poção de defesa", .35 , None, "Médio buff de defesa"   
+)
+L_defense_potion = Item(
+    "Poção grande de defesa", .4 , None, "Oferece grande buff de defesa porem lenta de consumir"   
+)
+    #wisdom
+S_wisdom_potion = Item(
+    "Poção pequena de intelgencia", .3 , None, "Pequeno buff de inteligencia"   
+)
+M_wisdom_potion = Item(
+    "Media poção de intelgencia", .35 , None, "Médio buff de inteligencia"   
+)
+L_wisdom_potion = Item(
+    "Poção grande de intelgencia", .4 , None, "Oferece grande buff de inteligencia porem lenta de consumir"
+)
+    #efeitos
+        #invisibilidade
+S_invisibility_potion = Item(
+    "Poção pequena de invisibilidade", .3 , None, "Oferece invisibilidade por 1 minutos"   
+)
+M_velocidade_potion = Item(
+    "Media poção de invisibilidade", .35 , None, "Oferece invisibilidade por 2,5 minutos"   
+)
+L_velocidade_potion = Item(
+    "Poção grande de invisibilidade", .4 , None, "Oferece invisibilidade por 5 minutos"   
+)
+        #taxa de drop
+S_drop_rate_potion = Item(
+    "Poção pequena de sorte", .3 , None, "Oferece pequena taxa de drop aumentada por 1 minuto"   
+)
+M_drop_rate_potion = Item(
+    "Media poção de sorte", .35 , None, "Oferece média taxa de drop aumentada por 2,5 minutos"   
+)
+L_drop_rate_potion = Item(
+    "Poção pequena de sorte", .4 , None, "Oferece alta taxa de drop aumentada por 5 minutos"   
+)
+        #
 
 #This code fkng sux
