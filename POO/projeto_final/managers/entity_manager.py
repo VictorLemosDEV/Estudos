@@ -58,7 +58,7 @@ class EntityManager:
         new_entity.id = entity_id
         self.active_entities[entity_id] = new_entity
         
-        print(f"➕ Entidade '{nome}' (ID: {entity_id}) criada e adicionada.")
+        # print(f"➕ Entidade '{nome}' (ID: {entity_id}) criada e adicionada.")
         return new_entity
     
     def create_npc(self, nome: str, raca_id: str, abilities: List[Skill]) -> Entity | None:
@@ -85,7 +85,7 @@ class EntityManager:
         new_entity.id = entity_id
         self.active_entities[entity_id] = new_entity
         
-        print(f"➕ NPC '{nome}' (ID: {entity_id}) criada e adicionada.")
+        # print(f"➕ NPC '{nome}' (ID: {entity_id}) criada e adicionada.")
         return new_entity
 
     def get_entity(self, entity_id: str) -> Entity | None:

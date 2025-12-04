@@ -26,7 +26,7 @@ class InventoryManager:
 
     def get_inventory(self, entity: 'Entity') -> Dict[str, InventorySlot]:
         """Retorna o inventário de uma entidade."""
-        return entity.inventory
+        return entity.inventario
     
     def use_item(self, entity: 'Entity', item_name: str, action_name: str = "consume", target: 'Entity' = None) -> bool:
         """
@@ -78,11 +78,11 @@ class InventoryManager:
              print(f"Inventário de {entity.nome} está cheio!")
              return False
 
-        if item.id in inventory:
-            current_item, current_qty = inventory[item.id]
-            inventory[item.id] = (current_item, current_qty + quantity)
+        if item.nome in inventory:
+            current_item, current_qty = inventory[item.nome]
+            inventory[item.nome] = (current_item, current_qty + quantity)
         else:
-            inventory[item.id] = (item, quantity)
+            inventory[item.nome] = (item, quantity)
         
         print(f"{entity.nome} ganhou {quantity}x {item.nome}.")
         return True

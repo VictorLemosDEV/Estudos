@@ -34,10 +34,10 @@ def tick_poison_damage(entity: 'Entity', am: 'AttributeManager'):
     
     # Aplica o dano diretamente ao HP atual da entidade
     entity.current_hp -= damage
-    print(f"🤢 {entity.nome} sofre {damage} de dano de Veneno. HP restante: {entity.current_hp}")
+    print(f"{entity.nome} sofre {damage} de dano de Veneno. HP restante: {entity.current_hp}")
     
     if entity.current_hp <= 0:
-        print(f"💀 {entity.nome} morreu envenenado!")
+        print(f"{entity.nome} morreu envenenado!")
         
 def tick_regeneration(entity: 'Entity', am: 'AttributeManager'):
     # A cura baseia-se em um valor fixo ou atributo (ex: 5 + 10% da CONSTITUICAO)
@@ -46,13 +46,13 @@ def tick_regeneration(entity: 'Entity', am: 'AttributeManager'):
     
     # Aplica cura usando o AttributeManager para respeitar o MAX_HP
     am.heal_entity(entity, heal_amount)
-    print(f"✨ {entity.nome} se regenera em {heal_amount} HP.")
+    print(f"{entity.nome} se regenera em {heal_amount} HP.")
     
     
 def tick_rage(entity: 'Entity', am: 'AttributeManager'):
     import random
     if random.random() < 0.2:  # 20% de chance de levar 1 de dano
-        print(f"🔥 {entity.nome} está exausto pela Fúria e sofre 1 de dano por fadiga.")
+        print(f"{entity.nome} está exausto pela Fúria e sofre 1 de dano por fadiga.")
         am.apply_damage(entity, 1) # Dano sem mitigação
     
     

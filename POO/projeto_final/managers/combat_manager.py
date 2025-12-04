@@ -51,9 +51,17 @@ class CombatManager:
         if current_entity.is_alive():
             print(f"\n--- Turno {self.turn_count} / Vez de: {current_entity.nome} (HP: {current_entity.current_hp}) ---")
             
-            chosen_skill, target = current_entity.choose_action(self)
+            chosen_skill, targets = current_entity.choose_action(self)
             
-            chosen_skill.execute_func(current_entity, target, self.attribute_manager)
+            # Verifica se é uma lista ou um único alvo
+            if isinstance(targets, list):
+                for target in targets:
+                    chosen_skill.execute_func(current_entity, target, self.attribute_manager)
+            elif targets:
+                chosen_skill.execute_func(current_entity, targets, self.attribute_manager)
+                
+                        
+            
         else:
             print(f"💀 {current_entity.nome} está fora de combate. Pulando turno.")
 
