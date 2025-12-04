@@ -1,8 +1,7 @@
+
+
 from typing import Protocol, List, Dict, Callable
-from utils.attribute_calculator import hp_calculator
-from data.racas import IRaca, Raca, RACA_CATALOGO
-from data.items import Item
-from data.skills import Skill
+from racas import IRaca, Raca, RACA_CATALOGO
 
 # INTERFACES
 
@@ -110,14 +109,14 @@ class Entity:
         self.stats = stats
         self.filiacoes = filiacaoLista
         self.inventario = inventario
-        self.equipment: Dict[str, Item | None]
+        self.equipment: Dict[str, 'Item' | None]
         
         self.abilities: List['Skill'] = abilities
         
         
         # Calculando Atributos Dinamicos
-        self.vida_maxima =  hp_calculator(self.stats.constituicao)
-        self.vida_atual = self.vida_maxima
+        self.max_hp =  hp_calculator(self.stats.constituicao)
+        self.current_hp = self.max_hp
         self.mana_maxima = 100
         self.mana = self.mana_maxima
         
@@ -132,11 +131,11 @@ class Entity:
         
         
     def is_alive(self):
-        return self.vida_atual > 0
+        return self.current_hp > 0
     
     def take_damage(self, damage):
-        self.vida_atual -= damage
-        print(f"{self.nome} sofreu {damage} de dano. HP restante: {self.vida_atual}")
+        self.current_hp -= damage
+        print(f"{self.nome} sofreu {damage} de dano. HP restante: {self.current_hp}")
         if not self.is_alive():
             print(f"{self.nome} foi derrotado!")
             
@@ -173,11 +172,11 @@ class Entity:
         
     def recalc_attributes(self, attribute_name: str, old: int, new: int):
         if attribute_name == "constituicao":
-            if self.vida_atual == self.vida_maxima:
-                self.vida_maxima = hp_calculator(self.stats.constituicao)
-                self.vida_atual = self.vida_maxima
+            if self.current_hp == self.max_hp:
+                self.max_hp = hp_calculator(self.stats.constituicao)
+                self.current_hp = self.max_hp
             else:
-                self.vida_maxima = hp_calculator(self.stats.constituicao)
+                self.max_hp = hp_calculator(self.stats.constituicao)
             
     
     def level_up(self):
@@ -203,6 +202,8 @@ class NPC(Entity):
         return combat_manager.npc_choose_ability(self)
 
 class Player(Entity):
+    
+    
    def choose_action(self, combat_manager):
         # Implementação da escolha do usuário
         return combat_manager.player_choose_ability(self)

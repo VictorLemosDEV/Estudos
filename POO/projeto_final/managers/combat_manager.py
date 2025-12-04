@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Union
 from data.skills import Skill
 from data.entity import NPC, Entity, Player
 from random import choices, choice
@@ -15,7 +15,6 @@ class CombatManager:
         if hasattr(self, '_initialized'):
             return
 
-        print("🎛️ CombatManager inicializado e pronto para a ação.")
         
         self.is_active = False
         self.turn_count = 0
@@ -27,7 +26,7 @@ class CombatManager:
         
     def start_combat(self, combatants: List): # Recebe uma lista única de combatentes
         if self.is_active:
-            print("🚨 Já existe uma batalha em andamento!")
+            print("Já existe uma batalha em andamento!")
             return
 
         self.is_active = True
@@ -50,8 +49,8 @@ class CombatManager:
         current_entity = self.participants[self.current_turn_index]
         
         if current_entity.is_alive():
-            print(f"\n--- Turno {self.turn_count} / Vez de: {current_entity.nome} (HP: {current_entity.vida_atual}) ---")
-
+            print(f"\n--- Turno {self.turn_count} / Vez de: {current_entity.nome} (HP: {current_entity.current_hp}) ---")
+            
             chosen_skill, target = current_entity.choose_action(self)
             
             chosen_skill.execute_func(current_entity, target, self.attribute_manager)
@@ -72,7 +71,7 @@ class CombatManager:
         
         if self.current_turn_index == 0:
             self.turn_count += 1
-            print("➡️ Fim do Round. Começando novo Round...")
+            print("Round. Começando novo Round...")
             
         self.process_turn()
         
@@ -127,6 +126,7 @@ class CombatManager:
         if not available_abilities:
             print(f"{npc.nome} usa Ataque Básico.")
             # return basic_attack_skill, target
+            print(npc.abilities)
             return choice(npc.abilities), self._select_random_target(npc)
 
 
@@ -163,6 +163,70 @@ class CombatManager:
             except ValueError:
                 print("Entrada inválida. Digite o número.")
                 
+    def _select_player_target(self, caster: 'Entity', target_type: str) -> 'Entity' | None:
+        """Permite que o jogador escolha um alvo entre os participantes válidos."""
+        
+
+        if target_type == 'SINGLE_ENEMY':
+            candidates = [p for p in self.participants if p.is_alive() and p is not caster]
+        elif target_type == 'SELF':
+            return caster
+        else:
+            candidates = []
+
+        if not candidates:
+            print("Nenhum alvo válido encontrado.")
+            return None
+
+        # 2. Exibir opções para o usuário
+        print("\n--- Escolha um Alvo ---")
+        for i, target in enumerate(candidates):
+            print(f"[{i + 1}] {target.nome} ({target.current_hp}/{target.max_hp} HP)")
+
+        while True:
+            try:
+                choice_index = int(input("Número do alvo: ")) - 1
+                if 0 <= choice_index < len(candidates):
+                    return candidates[choice_index]
+                else:
+                    print("Escolha de alvo inválida.")
+            except ValueError:
+           
+                print("Entrada inválida. Digite o número.")
+        
+        
+    def _select_target_by_type(self, caster: 'Entity', target_type: str) -> Union['Entity', List['Entity'], None]:
+        """
+        Seleciona o(s) alvo(s) para o NPC com base no tipo de habilidade.
+        
+        Args:
+            caster: A entidade que está usando a habilidade (o NPC).
+            target_type: O tipo de alvo ('SELF', 'SINGLE_ENEMY', 'ALL_ENEMIES').
+        
+        Returns:
+            A entidade alvo, uma lista de entidades alvo, ou None.
+        """
+        
+        # 1. Alvos Vivos no Combate, excluindo o Atacante.
+        potential_enemies = [
+            p for p in self.participants 
+            if p.is_alive() and p is not caster
+        ]
+
+        if target_type == 'SELF':
+            # Tipo: SELF (Apenas o usuário da habilidade)
+            return caster
+            
+        elif target_type == 'SINGLE_ENEMY':
+            # Tipo: SINGLE_ENEMY (Escolhe um alvo aleatório entre os inimigos)
+            if potential_enemies:
+                return choice(potential_enemies)
+            return None # Nenhum inimigo vivo
+            
+        elif target_type == 'ALL_ENEMIES':
+            # Tipo: ALL_ENEMIES (Retorna uma lista com todos os inimigos vivos)
+            return potential_enemies
+            
     def _select_random_target(self, caster: 'Entity') -> 'Entity':
         targets = [p for p in self.participants if p.is_alive() and p is not caster]
         return choice(targets) if targets else caster

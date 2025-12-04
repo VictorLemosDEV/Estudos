@@ -1,9 +1,9 @@
-from typing import Any, Callable, Dict, List, Tuple, TypeAlias
-from data.entity import Entity
-from random import random, randrange
-from matematica import definePeso
 
-from managers.inventory_manager import InventoryManager
+from typing import Any, Callable, Dict, List, Tuple, TypeAlias
+from random import random, randrange
+from data.matematica import definePeso
+
+
 from managers.attribute_manager import AttributeManager
 
 ITEM_CATALOGO = {}
@@ -48,7 +48,7 @@ class Item():
         """Ação padrão de equipar que não causa efeito, exceto pelo bônus de peso/slot."""
         print(f"[{self.nome} equipado no slot {slot}. Nenhum efeito especial.]")
         
-    def execute_action(self, action_name: str, entity: 'Entity', im: InventoryManager, am: AttributeManager, target: 'Entity' = None) -> bool:
+    def execute_action(self, action_name: str, entity: 'Entity', im: 'InventoryManager', am: 'AttributeManager', target: 'Entity' = None) -> bool:
         """
         Executa uma ação, injetando os Managers e desempacotando os argumentos específicos.
         """
@@ -83,9 +83,12 @@ class Item():
     def __repr__(self):
         return f"Item:('{self.nome}', Lvl:{self.level}, Peso:{self.peso}, Runas:{self.runas}, Descricao:{self.descricao})"
 
+class ConsumableItem(Item):
+    pass
+
 # --- AÇÕES GENÉRICAS ---
 
-def action_consumable_heal(entity: 'Entity', item: 'Item', im: InventoryManager, am: AttributeManager, heal_amount: int):
+def action_consumable_heal(entity: 'Entity', item: 'ConsumableItem', im: 'InventoryManager', am: 'AttributeManager', heal_amount: int):
     """
     Ação genérica para itens que curam HP ao serem consumidos.
     O valor da cura (heal_amount) é configurado no Item.
@@ -97,7 +100,7 @@ def action_consumable_heal(entity: 'Entity', item: 'Item', im: InventoryManager,
         print(f"❌ {item.nome} não pôde ser consumido (item não encontrado).")
 
 
-def action_throw_damage(entity: 'Entity', target: 'Entity', item: 'Item', im: InventoryManager, am: AttributeManager, damage_base: int):
+def action_throw_damage(entity: 'Entity', target: 'Entity', item: 'Item', im: 'InventoryManager', am: 'AttributeManager', damage_base: int):
     """
     Ação genérica para itens que causam dano ao serem atirados.
     O valor do dano (damage_base) é configurado no Item.
@@ -119,7 +122,7 @@ copper_sword = Item(
     "Espada de cobre", 3, None, "Uma espada comum de cobre, versátil e durável, quase bom em quase qualquer situação"   
 )
 copper_spear = Item(
-    "Lança de cobre", 2, None, "Uma lança comum de cobre, longo alcance, perfuração e veolidade mas não deixe seus inimigos chegarem perto"   
+    "Lança de cobre", 2, None, "Uma lança comum de cobre, longo alcance, perfuração e velocidade mas não deixe seus inimigos chegarem perto"   
 )
 copper_dagger = Item(
     "Adaga de cobre", 1, None, "Uma adaga comum de cobre, rápida e curta, otimá para retaliar rapidmente, mas seu alcance deixa a desejar..."   

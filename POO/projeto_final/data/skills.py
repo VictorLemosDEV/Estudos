@@ -1,7 +1,7 @@
 from typing import Callable, Dict
 from data.entity import Entity
 from managers.attribute_manager import AttributeManager
-
+from data.
 
 SKILL_CATALOG: Dict[str, 'Skill'] = {}
 
@@ -34,7 +34,16 @@ def execute_basic_attack(caster: 'Entity', target: 'Entity', am: 'AttributeManag
 
     print(f"{caster.nome} realiza um Ataque Básico em {target.nome}.")
     am.apply_damage(target, base_damage)
-    
+
+
+def AtaqueBasico(caster: Entity,target: Entity,attributeManager: AttributeManager):
+    if caster and target and attributeManager:
+        damage = caster.stats.forca * 2
+        attributeManager.apply_damage(target, damage)
+        print(f"{caster.nome} usou ataque ultra básico em {target.nome}")
+
+def defende(caster: Entity,target: Entity,attributeManager: AttributeManager):
+    caster.stats.constituicao += 
     
 ataque_basico = Skill(
     id="basic_attack", 
@@ -42,12 +51,12 @@ ataque_basico = Skill(
     cost=0, 
     cooldown=0,
     target_type='SINGLE_ENEMY', 
-    execute_func=lambda c, t, am: print(f"Ataque de {c.nome} em {t.nome}"),
+    execute_func=AtaqueBasico,
     weight=100
 )
 
 esquiva = Skill(
-    id="evade", 
+    id="evade",
     nome="Esquiva", 
     cost=0, 
     cooldown=0,
