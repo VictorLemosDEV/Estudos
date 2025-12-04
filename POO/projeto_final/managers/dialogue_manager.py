@@ -137,3 +137,4 @@ add(
 add(DialogueManager, "sucesso_coleta", "Você agora tem uma arma melhor. Siga em frente!", "tutorial.fim")
 add(DialogueManager, "combate_iniciado", "O combate será difícil. Prepare-se para lutar!", "tutorial.fim")
 add(DialogueManager, "tutorial.fim", "Parabéns, o tutorial terminou.", None)
+
