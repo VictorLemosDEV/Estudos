@@ -45,3 +45,43 @@ ataque_basico = Skill(
     execute_func=lambda c, t, am: print(f"Ataque de {c.nome} em {t.nome}"),
     weight=100
 )
+
+esquiva = Skill(
+    id="evade", 
+    nome="Esquiva", 
+    cost=0, 
+    cooldown=0,
+    target_type='SELF', 
+    execute_func=lambda c, t, am: print(f"{c.nome} se esquiva!"),
+    weight=90
+)
+
+defesa = Skill(
+    id="defend", 
+    nome="Defender", 
+    cost=0, 
+    cooldown=0,
+    target_type='SELF', 
+    execute_func=lambda c, t, am: print(f"{c.nome} levanta guarda!"),
+    weight=90
+)
+
+consome = Skill(
+    id="use", 
+    nome="Usar", 
+    cost=0, 
+    cooldown=0,
+    target_type='SELF', 
+    execute_func=lambda c, t, am: print(f"{c.nome} se esquiva"),
+    weight=90
+)
+
+consome = Skill(
+    id="use", 
+    nome="Usar", 
+    cost=0, 
+    cooldown=0,
+    target_type='SELF', 
+    execute_func=lambda c, t, am: print(f"{c.nome} se esquiva"),
+    weight=90
+)
