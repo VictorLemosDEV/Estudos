@@ -18,5 +18,5 @@ if __name__ == "__main__":
     GM = GameManager()
     
     # 2. Inicia o jogo
-    GM.trigger_combat(["Gnomo Inventor", "Meio-Orc"])
+    GM.trigger_combat(["Gnomo Inventor"])
     

@@ -108,7 +108,7 @@ def iniciar_combate(inimigo: str, dificuldade: int) -> str | None:
 def fechar_jogo() -> str | None:
     print("\n👋 Fim de jogo. Até a próxima!")
     exit()
-    # 🔄 Retorna None, pois o jogo será encerrado
+    # Retorna None, pois o jogo será encerrado
     return None
 
 
