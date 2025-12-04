@@ -122,7 +122,7 @@ copper_sword = Item(
     "Espada de cobre", 3, None, "Uma espada comum de cobre, versátil e durável, quase bom em quase qualquer situação"   
 )
 copper_spear = Item(
-    "Lança de cobre", 2, None, "Uma lança comum de cobre, longo alcance, perfuração e veolidade mas não deixe seus inimigos chegarem perto"   
+    "Lança de cobre", 2, None, "Uma lança comum de cobre, longo alcance, perfuração e velocidade mas não deixe seus inimigos chegarem perto"   
 )
 copper_dagger = Item(
     "Adaga de cobre", 1, None, "Uma adaga comum de cobre, rápida e curta, otimá para retaliar rapidmente, mas seu alcance deixa a desejar..."   

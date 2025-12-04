@@ -94,22 +94,24 @@ class DialogueManager:
         
         
 def coletar_item(item: str, quantidade: int) -> str | None:
-    print(f"\n✨ Você coletou {quantidade}x de {item}! A busca foi bem sucedida!")
+    print(f"\n Você coletou {quantidade}x de {item}! A busca foi bem sucedida!")
     sleep(1.5)
-    # 🔄 NOVO: Retorna o ID do diálogo de sucesso
+    # NOVO: Retorna o ID do diálogo de sucesso
     return "sucesso_coleta" 
 
 def iniciar_combate(inimigo: str, dificuldade: int) -> str | None:
-    print(f"\n⚔️ Combatendo {inimigo} na dificuldade {dificuldade}!")
+    print(f"\n Combatendo {inimigo} na dificuldade {dificuldade}!")
     sleep(1.5)
-    # 🔄 NOVO: Retorna o ID do diálogo de combate
+    # NOVO: Retorna o ID do diálogo de combate
     return "combate_iniciado"
 
 def fechar_jogo() -> str | None:
-    print("\n👋 Fim de jogo. Até a próxima!")
+    print("\n Fim de jogo. Game Over seu NOOOOOOOOOB! 6767 676 7 67 67 BONBARDIRO CROCODIRO 67 67 67 SUBWAYSURFEER FREE MOBILE FEET PHOTO GRATIS 2025")
     exit()
-    # 🔄 Retorna None, pois o jogo será encerrado
+    # Retorna None, pois o jogo será encerrado
     return None
+
+def beber_pocao() -> str | None:
 
 
 #DialogueManager._addDialogue(DialogueManager,"ID DO DIALOGO","TEXTO DO DIALOGO", "ID DO PRÒXIMO DIALOGO SE HOUVER", [("TEXTO ESCOLHA 1", FUNCAO_ESCOLHA_1), ("TEXTO ESCOLHA 2", FUNCAO_ESCOLHA_2)])        
@@ -137,4 +139,3 @@ add(
 add(DialogueManager, "sucesso_coleta", "Você agora tem uma arma melhor. Siga em frente!", "tutorial.fim")
 add(DialogueManager, "combate_iniciado", "O combate será difícil. Prepare-se para lutar!", "tutorial.fim")
 add(DialogueManager, "tutorial.fim", "Parabéns, o tutorial terminou.", None)
-

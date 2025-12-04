@@ -1,8 +1,7 @@
 
 
 from typing import Protocol, List, Dict, Callable
-from utils.attribute_calculator import hp_calculator
-from data.racas import IRaca, Raca, RACA_CATALOGO
+from racas import IRaca, Raca, RACA_CATALOGO
 
 # INTERFACES
 
