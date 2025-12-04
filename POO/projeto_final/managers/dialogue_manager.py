@@ -48,15 +48,23 @@ class DialogueManager:
         self.limpar_terminal()
         for char in dialogue[0]:
             print(char,end="",flush=True)
-            sleep(0.1)
+            sleep(0.05)
             
-        print("")
+        input()
+        if (dialogue[1]):
+            self.showDialogue(dialogue[1]) # Mostra o próximo dialogo
         
         
+        
 
 
-DialogueManager._addDialogue(DialogueManager,"A","AAAAAAAAAAAAAAAAAAAAAAAAAAAAA")        
 
+#DialogueManager._addDialogue(DialogueManager,"ID DO DIALOGO","TEXTO DO DIALOGO", "ID DO PRÒXIMO DIALOGO SE HOUVER", [("TEXTO ESCOLHA 1", FUNCAO_ESCOLHA_1), ("TEXTO ESCOLHA 2", FUNCAO_ESCOLHA_2)])        
+
+add = DialogueManager._addDialogue
+
+add(DialogueManager,"tutorial.1", "Seja bem vindo ao tutorial caro guerreiro!", "tutorial.2")
+add(DialogueManager,"tutorial.2", "Aqui nesse reino perdemos muitas vidas anualmente")
         
         
         

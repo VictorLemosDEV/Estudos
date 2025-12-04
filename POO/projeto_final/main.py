@@ -16,7 +16,7 @@ from random import choice
 if __name__ == "__main__":
 
     DM = DialogueManager()
-    DM.showDialogue("A")
+    DM.showDialogue("tutorial.1")
     
 
     player = Entity(nome="Herói Lendário",raca=RACA_CATALOGO["Humano"])
