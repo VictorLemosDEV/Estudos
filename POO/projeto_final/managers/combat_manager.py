@@ -1,5 +1,7 @@
-from typing import List
-from data.entity import Entity
+from typing import List, Tuple
+from data.skills import Skill
+from data.entity import NPC, Entity, Player
+from random import choices, choice
 
 class CombatManager:
     _instance = None
@@ -50,10 +52,10 @@ class CombatManager:
         if current_entity.is_alive():
             print(f"\n--- Turno {self.turn_count} / Vez de: {current_entity.nome} (HP: {current_entity.vida_atual}) ---")
 
-            # Chama o método de ação da entidade
-            # current_entity.choose_action(self) 
+            chosen_skill, target = current_entity.choose_action(self)
+            
+            chosen_skill.execute_func(current_entity, target, self.attribute_manager)
         else:
-            # Pula entidades mortas (caso um ataque as mate fora de seu turno)
             print(f"💀 {current_entity.nome} está fora de combate. Pulando turno.")
 
 
@@ -110,6 +112,60 @@ class CombatManager:
         self.participants = []
         self.current_turn_index = 0
         print("--- Batalha Encerrada ---")
+        
+    def npc_choose_ability(self, npc: 'NPC') -> Tuple['Skill', 'Entity']:
+        """
+        Implementa a lógica de escolha de habilidade baseada em peso (weight).
+        """
+        
+        # 1. Filtra as habilidades que o NPC PODE usar (mana/cooldown)
+        available_abilities = [
+            skill for skill in npc.abilities 
+            if self.skill_manager.can_use_skill(npc, skill)
+        ]
+
+        if not available_abilities:
+            print(f"{npc.nome} usa Ataque Básico.")
+            # return basic_attack_skill, target
+            return choice(npc.abilities), self._select_random_target(npc)
+
+
+        weights = [skill.weight for skill in available_abilities]
+        
+        chosen_skill: 'Skill' = choices(available_abilities, weights=weights, k=1)[0]
+        
+        target = self._select_target_by_type(npc, chosen_skill.target_type)
+        
+        return chosen_skill, target
+    
+    def player_choose_ability(self, player: 'Player') -> Tuple['Skill', 'Entity']:
+        """
+        Solicita a entrada do usuário para escolher a habilidade e o alvo.
+        """
+        available_abilities = [
+            skill for skill in player.abilities 
+            if self.skill_manager.can_use_skill(player, skill)
+        ]
+        
+        print("\n--- Escolha uma Habilidade ---")
+        for i, skill in enumerate(available_abilities):
+            print(f"[{i + 1}] {skill.nome} (Custo: {skill.cost})")
+
+        while True:
+            try:
+                choice_index = int(input("Sua escolha: ")) - 1
+                if 0 <= choice_index < len(available_abilities):
+                    chosen_skill = available_abilities[choice_index]
+                    target = self._select_player_target(player, chosen_skill.target_type)
+                    return chosen_skill, target
+                else:
+                    print("Escolha inválida.")
+            except ValueError:
+                print("Entrada inválida. Digite o número.")
+                
+    def _select_random_target(self, caster: 'Entity') -> 'Entity':
+        targets = [p for p in self.participants if p.is_alive() and p is not caster]
+        return choice(targets) if targets else caster
         
     def get_participants(self):
         # Retorna apenas os participantes que estão vivos
