@@ -20,3 +20,14 @@ if __name__ == "__main__":
     # 2. Inicia o jogo
     GM.trigger_combat(["Gnomo Inventor"])
     
+=======
+#     # 2. Inicia o jogo
+#     GM.trigger_combat(["Gnomo Inventor", "Meio-Orc"])
+    
+
+    
+pirokabranca = EntityManager.create_entity(Pau, Humano)
+
+calculaDefesa(Pau)
+>>>>>>> d14de23317b85ad695239b9dd74e492997344006
+    
