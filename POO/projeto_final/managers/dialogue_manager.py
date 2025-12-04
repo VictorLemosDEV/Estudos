@@ -112,6 +112,7 @@ def fechar_jogo() -> str | None:
     return None
 
 def beber_pocao() -> str | None:
+    pass
 
 
 #DialogueManager._addDialogue(DialogueManager,"ID DO DIALOGO","TEXTO DO DIALOGO", "ID DO PRÒXIMO DIALOGO SE HOUVER", [("TEXTO ESCOLHA 1", FUNCAO_ESCOLHA_1), ("TEXTO ESCOLHA 2", FUNCAO_ESCOLHA_2)])        

@@ -1,5 +1,4 @@
-from entity import Entity
-from managers.entity_manager import create_entity
+from data.entity import Entity
 
 from random import random, randrange, choice
 
@@ -10,6 +9,3 @@ def calculaDefesa(pirokapreta: Entity):
     return((((pirokapreta.stats.constituicao)/2)+(pirokapreta.level))+randrange(pirokapreta.level, pirokapreta.level + 15))
 
 
-pirokabranca = EntityManager.create_entity(Pau, Humano)
-
-calculaDefesa(Pau)

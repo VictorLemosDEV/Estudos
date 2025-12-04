@@ -1,7 +1,6 @@
 from typing import Callable, Dict
 from data.entity import Entity
 from managers.attribute_manager import AttributeManager
-from data.
 
 SKILL_CATALOG: Dict[str, 'Skill'] = {}
 
@@ -43,7 +42,7 @@ def AtaqueBasico(caster: Entity,target: Entity,attributeManager: AttributeManage
         print(f"{caster.nome} usou ataque ultra básico em {target.nome}")
 
 def defende(caster: Entity,target: Entity,attributeManager: AttributeManager):
-    caster.stats.constituicao += 
+    caster.stats.constituicao += 5
     
 ataque_basico = Skill(
     id="basic_attack", 
