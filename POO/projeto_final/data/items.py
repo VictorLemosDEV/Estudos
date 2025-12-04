@@ -128,6 +128,6 @@ M_drop_rate_potion = Item(
 L_drop_rate_potion = Item(
     "Poção pequena de sorte", .4 , None, "Oferece alta taxa de drop aumentada por 5 minutos"   
 )
-        #
+
 
 #This code fkng sux
