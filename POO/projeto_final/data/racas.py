@@ -18,7 +18,6 @@ class Raca(IRaca):
         
         RACA_CATALOGO[self.nome] = self
         
-    
         
     def __repr__(self):
         return f"Raca('{self.nome}', Mod: {self.attributeBonus})"
