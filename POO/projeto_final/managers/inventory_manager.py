@@ -1,8 +1,10 @@
-from typing import List, Dict, Tuple, Any, TypeAlias, Callable
-from data.entity import Entity
-from data.items import Item, ConsumableItem
+from __future__ import annotations
 
-# 🔄 TypeAlias para representar um slot de inventário: Item e sua quantidade
+from typing import List, Dict, Tuple, Any, TypeAlias, Callable
+from data.items import ITEM_CATALOGO, Item, ConsumableItem
+
+
+
 InventorySlot: TypeAlias = Tuple[Item, int]
 
 
@@ -22,10 +24,51 @@ class InventoryManager:
             return
         self._initialized = True
 
-    def get_inventory(self, entity: Entity) -> Dict[str, InventorySlot]:
+    def get_inventory(self, entity: 'Entity') -> Dict[str, InventorySlot]:
         """Retorna o inventário de uma entidade."""
-        # Assumindo que a Entity possui um atributo 'inventory: Dict[str, InventorySlot]'
         return entity.inventory
+    
+    def use_item(self, entity: 'Entity', item_name: str, action_name: str = "consume", target: 'Entity' = None) -> bool:
+        """
+        Executa a ação de uso de um item, injetando os Managers.
+        """
+        item_instance = self._get_item_instance(item_name) 
+
+        if not item_instance:
+            print(f"❌ Item '{item_name}' não encontrado.")
+            return False
+
+        # Verifica se a entidade realmente possui o item antes de tentar usar
+        if item_instance.nome not in self.get_inventory(entity):
+             print(f"❌ {entity.nome} não possui {item_name}.")
+             return False
+
+        return item_instance.execute_action(
+            action_name=action_name,
+            entity=entity,
+            im=self, # Passa o próprio InventoryManager
+            am=self.attribute_manager, # Passa o AttributeManager
+            target=target
+        )
+
+    def equip_item(self, entity: 'Entity', item_name: str, slot: str):
+        """
+        Executa a ação de equipar de um item.
+        """
+        item_instance = self._get_item_instance(item_name) 
+
+        if not item_instance:
+            return False
+        return item_instance.execute_action(
+            action_name="equip",
+            entity=entity,
+            im=self,
+            am=self.attribute_manager,
+            slot=slot
+        )
+        
+    def _get_item_instance(self, item_name: str) -> 'Item' | None:
+        return ITEM_CATALOGO.get(item_name)
 
     def add_item(self, entity: Entity, item: Item, quantity: int = 1) -> bool:
         """Adiciona um item ao inventário da entidade."""
@@ -41,7 +84,7 @@ class InventoryManager:
         else:
             inventory[item.id] = (item, quantity)
         
-        print(f"📦 {entity.nome} ganhou {quantity}x {item.nome}.")
+        print(f"{entity.nome} ganhou {quantity}x {item.nome}.")
         return True
 
     def remove_item(self, entity: Entity, item_id: str, quantity: int = 1) -> bool:
@@ -81,7 +124,7 @@ class InventoryManager:
         
         # Lógica de desequipar item no slot atual (se houver) e equipar o novo
         
-        print(f"🛡️ {entity.nome} equipou {item.nome}.")
+        print(f"{entity.nome} equipou {item.nome}.")
         return True
     
     def use_consumable(self, entity: Entity, item_id: str) -> bool:
@@ -97,8 +140,6 @@ class InventoryManager:
             print(f"{item.nome} não é um item consumível.")
             return False
             
-        # item.apply_effect(entity) 
         print(f"🧪 {entity.nome} usou {item.nome}.")
         
-        # 2. Remover o item do inventário
         return self.remove_item(entity, item_id, 1)

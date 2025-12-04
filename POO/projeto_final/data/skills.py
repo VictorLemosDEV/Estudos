@@ -34,7 +34,13 @@ def execute_basic_attack(caster: 'Entity', target: 'Entity', am: 'AttributeManag
 
     print(f"{caster.nome} realiza um Ataque Básico em {target.nome}.")
     am.apply_damage(target, base_damage)
-    
+
+
+def AtaqueBasico(caster: Entity,target: Entity,attributeManager: AttributeManager):
+    if caster and target and attributeManager:
+        damage = caster.stats.forca * 2
+        attributeManager.apply_damage(target, damage)
+        print(f"{caster.nome} usou ataque ultra básico em {target.nome}")
     
 ataque_basico = Skill(
     id="basic_attack", 
@@ -42,6 +48,6 @@ ataque_basico = Skill(
     cost=0, 
     cooldown=0,
     target_type='SINGLE_ENEMY', 
-    execute_func=lambda c, t, am: print(f"Ataque de {c.nome} em {t.nome}"),
+    execute_func=AtaqueBasico,
     weight=100
 )

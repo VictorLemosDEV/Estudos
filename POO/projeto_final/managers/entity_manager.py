@@ -1,6 +1,8 @@
 from typing import Dict, List, TypeAlias
-from data.entity import Entity
+from data.entity import NPC, Entity
 from data.racas import RACA_CATALOGO, IRaca
+
+from data.skills import Skill
 
 
 EntityCatalog: TypeAlias = Dict[str, Entity]
@@ -58,6 +60,33 @@ class EntityManager:
         
         print(f"➕ Entidade '{nome}' (ID: {entity_id}) criada e adicionada.")
         return new_entity
+    
+    def create_npc(self, nome: str, raca_id: str, abilities: List[Skill]) -> Entity | None:
+        """
+        Cria uma nova instância de Entity e a adiciona ao catálogo de entidades ativas.
+        
+        Args:
+            nome (str): O nome da entidade (ex: 'Goblin').
+            raca_id (str): O ID da raça no RACA_CATALOGO (ex: 'Gnomo Inventor').
+            
+        Returns:
+            Entity | None: A entidade criada ou None se a raça não for encontrada.
+        """
+        raca_data: IRaca | None = RACA_CATALOGO.get(raca_id)
+        
+        if not raca_data:
+            print(f"ERRO: Raça '{raca_id}' não encontrada para criar {nome}.")
+            return None
+
+        entity_id = self._generate_unique_id(nome)
+        
+        new_entity = NPC(nome=nome, raca=raca_data,abilities=abilities)
+        
+        new_entity.id = entity_id
+        self.active_entities[entity_id] = new_entity
+        
+        print(f"➕ NPC '{nome}' (ID: {entity_id}) criada e adicionada.")
+        return new_entity
 
     def get_entity(self, entity_id: str) -> Entity | None:
         """Busca uma entidade pelo seu ID único."""
@@ -74,3 +103,5 @@ class EntityManager:
     def get_all_entities(self) -> List[Entity]:
         """Retorna uma lista de todas as entidades ativas."""
         return list(self.active_entities.values())
+    
+    
