@@ -40,5 +40,5 @@ class AttributeManager:
         
     def calculate_damage_mitigation(self, entity: Entity) -> int:
         final_stats = self.calculate_final_stats(entity)
-        defense = final_stats.get('DEFENSE', 0)
+        defense = final_stats.get('constituicao', 0)
         return defense // 2

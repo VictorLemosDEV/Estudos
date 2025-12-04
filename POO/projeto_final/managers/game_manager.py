@@ -53,7 +53,7 @@ class GameManager:
             max_hp = initial_stats.get('vida_maxima', 10)
             self.player.max_hp = max_hp
             self.player.current_hp = max_hp
-            print(f"👤 Jogador criado e inicializado. HP: {self.player.current_hp}/{self.player.max_hp}")
+            # print(f"👤 Jogador criado e inicializado. HP: {self.player.current_hp}/{self.player.max_hp}")
             
             self.current_state = "MENU"
 

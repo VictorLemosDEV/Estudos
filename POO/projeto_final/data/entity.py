@@ -68,6 +68,8 @@ class EntityStats():
     constituicao = ObservableStat(valor_inicial=1)
     agilidade = ObservableStat(valor_inicial=1)
     inteligencia = ObservableStat(valor_inicial=1)
+    
+  
 
     def __init__(self, **kwargs):
         self._observers: List[Callable] = []
@@ -85,7 +87,7 @@ class EntityStats():
     def register_observer(self, observer_func):
         if observer_func not in self._observers:
             self._observers.append(observer_func)
-            print(f"-> Observer {observer_func.__name__} registrado.")
+           # print(f"-> Observer {observer_func.__name__} registrado.")
             
     def _notify_observers(self, attribute_name: str, old: int, new: int):
         for observer in self._observers:
