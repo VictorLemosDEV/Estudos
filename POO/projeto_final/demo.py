@@ -13,6 +13,8 @@ from data.racas import RACA_CATALOGO
 from data.skills import SKILL_CATALOG
 from data.items import ITEM_CATALOGO, copper_sword
 
+from time import sleep
+
 
 def separador(titulo=""):
     print(f"\n{'='*60}")
@@ -29,7 +31,7 @@ def pausar():
 # ===== CONCEITOS DE POO =====
 
 def demo_poo():
-    separador("1. CONCEITOS DE POO")
+    separador("1. POO GOOOO BRRRRRRR")
     
     print("HERANÇA: Entity -> Player, NPC")
     print("POLIMORFISMO: choose_action() diferente em cada classe")
@@ -59,7 +61,10 @@ def demo_poo():
     print("\n--- Padrão Observer ---")
     print(f"Constituição: {player.stats.constituicao} | HP máximo: {player.max_hp}")
     player.stats.constituicao = 8
-    print(f"Mudou para: {player.stats.constituicao} | HP máximo: {player.max_hp} (recalculado!)")
+    print(f"Mudou para: {player.stats.constituicao} | HP máximo: {player.max_hp} (recalculado)")
+    
+    
+    
     
     pausar()
     return player, npc
@@ -134,7 +139,11 @@ def demo_managers():
     print("\n--- DialogueManager ---")
     dlg = DialogueManager()
     print("✓ Sistema de diálogos disponível")
+
     print(f"  Exemplo: dlg.showDialogue('tutorial.1')")
+    
+    dlg.showDialogue("tutorial.1")
+    
     
     pausar()
 

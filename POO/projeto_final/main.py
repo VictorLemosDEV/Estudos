@@ -13,9 +13,9 @@ from random import choice
 
 
 
-# if __name__ == "__main__":
-#     # 1. Inicializa o GameManager, que por sua vez inicializa tudo.
-#     GM = GameManager()
+if __name__ == "__main__":
+
+    GM = GameManager()
     
 
     # 2. Inicia o jogo
