@@ -1,193 +1,33 @@
-from typing import Protocol, List, Dict, Callable
 
+
+from managers.dialogue_manager import DialogueManager
+from managers.combat_manager import CombatManager
 from utils.attribute_calculator import hp_calculator
 from data.racas import IRaca, Raca, RACA_CATALOGO
+from data.entity import Entity
 
 from random import choice
 
-# INTERFACES
 
 
 
-class IFiliacao(Protocol):
-    membro: Entity
-    level: int
-    
-class IStats(Protocol):
-    _forca: ObservableStat
-    _constituicao: ObservableStat
-    _agilidade: ObservableStat
-    _inteligencia: ObservableStat
-    
-    bonus: Dict[str, int]
+
+
+if __name__ == "__main__":
+
+    DM = DialogueManager()
+    DM.showDialogue("A")
     
 
-class ObservableStat:
-    """Descritor que adiciona lógica de observação a um atributo."""
+    player = Entity(nome="Herói Lendário",raca=RACA_CATALOGO["Humano"])
+    goblin = Entity(nome="Goblin", raca=RACA_CATALOGO["Gnomo Inventor"])
+    orc = Entity(nome="Orc Brutal",raca=RACA_CATALOGO["Meio-Orc"])
     
-    def __init__(self, valor_inicial=1):
-        self._valor_inicial = valor_inicial
-        # O nome real do atributo na instância será definido em __set_name__
-        self.nome_atributo_interno = None 
-
-    def __set_name__(self, owner, name):
-        # Define o nome da variável privada (ex: _forca, _constituicao)
-        self.nome_atributo_interno = f'_{name}' 
-
-    def __get__(self, instance, owner):
-        # Retorna o valor atual da instância
-        if instance is None:
-            return self
-        # Pega o valor do dicionário interno da instância (ex: instance.__dict__['_constituicao'])
-        return instance.__dict__.get(self.nome_atributo_interno, self._valor_inicial)
-
-    def __set__(self, instance, novo_valor):
-        # Pega o valor antigo para comparação
-        valor_antigo = self.__get__(instance, owner=None)
-        
-        if novo_valor != valor_antigo:
-            # 1. Atualiza o valor na instância
-            instance.__dict__[self.nome_atributo_interno] = novo_valor
-            
-            # 2. Notifica a instância principal (PersonagemStats)
-            # O 'instance' aqui é o objeto PersonagemStats que possui o descritor
-            instance._notify_observers(
-                attribute_name=self.nome_atributo_interno.strip('_'), # 'constituicao'
-                old=valor_antigo, 
-                new=novo_valor
-            )
-            
+    cm = CombatManager()
     
+    CombatManager.process_turn = lambda self: (
+        (self.participants[self.current_turn_index].choose_action(self), self._next_participant()) if self.is_active else
+        print("Nenhuma batalha ativa para processar.")
+    )
 
-# --------------------
-
-# Implementações das Intefaces
-
-
-class EntityStats():
-    
-    forca = ObservableStat(valor_inicial=1)
-    constituicao = ObservableStat(valor_inicial=1)
-    agilidade = ObservableStat(valor_inicial=1)
-    inteligencia = ObservableStat(valor_inicial=1)
-
-    def __init__(self, **kwargs):
-        self._observers: List[Callable] = []
-        self.bonus: Dict[str, int] = {}
-        
-        
-        for stat, valor in kwargs.items():
-            if hasattr(self, stat) and stat != 'bonus':
-                setattr(self, stat, valor)
-            elif stat == 'bonus':
-                self.bonus = valor
-            
-        
-        
-    def register_observer(self, observer_func):
-        if observer_func not in self._observers:
-            self._observers.append(observer_func)
-            print(f"-> Observer {observer_func.__name__} registrado.")
-            
-    def _notify_observers(self, attribute_name: str, old: int, new: int):
-        for observer in self._observers:
-            observer(attribute_name, old, new)
-            
-            
-
-    
-    
-   
-
-#----------------------------------------------
-
-class Entity:
-    def __init__(self, nome: str, raca: IRaca,stats: EntityStats = EntityStats(), level: int = 1, filiacaoLista: List[IFiliacao] = [], inventario = []):
-        self.initialized = False
-        
-        self.nome = nome
-        self.raca = raca
-        self.level = level
-        self.stats = stats
-        self.filiacoes = filiacaoLista
-        self.inventario = inventario
-        
-        
-        # Calculando Atributos Dinamicos
-        self.vida_maxima =  hp_calculator(self.stats._constituicao)
-        self.vida_atual = self.vida_maxima
-        self.mana = 100
-        
-        
-        self.ApplyRaceBonus()
-        
-        
-        
-        self.stats.register_observer(self.recalc_attributes)
-        
-        self.initialized = True
-        
-        
-        
-    def ApplyRaceBonus(self):
-        if len(self.raca.attributeBonus) <= 0:
-            return
-        
-        
-        for stat, bonus in self.raca.attributeBonus.items():
-            if self.stats.bonus.get(stat, None):
-                self.stats.bonus[stat] += bonus
-            else:
-                self.stats.bonus[stat] = bonus
-                
-                
-            if hasattr(self.stats, stat):
-                old = getattr(self.stats,stat)
-                setattr(self.stats, stat, old + bonus)
-    
-        
-    def recalc_attributes(self, attribute_name: str, old: int, new: int):
-        if attribute_name == "constituicao":
-            if self.vida_atual == self.vida_maxima:
-                self.vida_maxima = hp_calculator(self.stats.constituicao)
-                self.vida_atual = self.vida_maxima
-            else:
-                self.vida_maxima = hp_calculator(self.stats.constituicao)
-            
-    
-    def level_up(self):
-        self.level += 1
-        
-        
-        
-        for stat, bonus in self.raca.attributeBonus.items():
-            if self.stats.bonus.get(stat, None):
-                self.stats.bonus[stat] += bonus
-            else:
-                self.stats.bonus[stat] = bonus
-                
-                
-            if hasattr(self.stats, stat):
-                old = getattr(self.stats,stat)
-                setattr(self.stats, stat, old + bonus)
-        
-            
-
-class NPC(Entity):
-    pass
-
-class Player(Entity):
-    pass
-
-
-
-
-
-entidade = Entity("João")
-
-
-
-for x in range(10):
-    print(entidade.vida_maxima)
-    entidade.level_up()
-
+    cm.start_combat([player,goblin,orc])
