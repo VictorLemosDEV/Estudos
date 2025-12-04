@@ -1,9 +1,16 @@
-from typing import List
+from typing import Any, Callable, Dict, List, Tuple, TypeAlias
+from data.entity import Entity
 from random import random, randrange
 from matematica import definePeso
 
+from managers.inventory_manager import InventoryManager
+from managers.attribute_manager import AttributeManager
+
 ITEM_CATALOGO = {}
 RUNAS = {}
+
+ActionFunction: TypeAlias = Callable[..., None]
+ActionDefinition: TypeAlias = Tuple[ActionFunction, Dict[str, Any]]
 
 class Runa():
 # class Runa(IRuna):
@@ -20,17 +27,91 @@ class Runa():
 # class Item(IItem):
 class Item():
 
-    def __init__(self, nome: str, peso: float, runas: List[Runa], descricao: str):
+    def __init__(self, nome: str, peso: float, runas: List[Runa], descricao: str, actions: Dict[str, Callable[['Entity', Any], None]] = None):
         self.nome = nome
         self.level = randrange(1, 3)
         self.peso = definePeso(peso)
         self.runas = runas
         self.descricao = descricao
+        
+        self.actions: Dict[str, ActionDefinition] = actions if actions is not None else {}
+        
+        if "equip" not in self.actions:
+            self.actions["equip"] = (self._default_equip_action, {"slot": "undefined"})
+            
+        self.effects = self.actions
 
         ITEM_CATALOGO[self.nome] = self #insere a nova instancia de item dentro do dicionario de itens
+        
+        
+    def _default_equip_action(self, entity: 'Entity', slot: str):
+        """Ação padrão de equipar que não causa efeito, exceto pelo bônus de peso/slot."""
+        print(f"[{self.nome} equipado no slot {slot}. Nenhum efeito especial.]")
+        
+    def execute_action(self, action_name: str, entity: 'Entity', im: InventoryManager, am: AttributeManager, target: 'Entity' = None) -> bool:
+        """
+        Executa uma ação, injetando os Managers e desempacotando os argumentos específicos.
+        """
+        if action_name in self.actions:
+            func, specific_args = self.actions[action_name]
+            
+            # Argumentos base que toda ação pode precisar
+            base_args = {
+                'entity': entity,
+                'item': self,
+                'im': im,
+                'am': am,
+                'target': target 
+            }
+            
+            # Combina argumentos específicos do item com argumentos base.
+
+            
+
+            
+            try:
+                func(**base_args, **specific_args)
+                return True
+            except TypeError as e:
+                print(f"❌ ERRO de execução na função {func.__name__}: {e}")
+                return False
+
+        else:
+            print(f"❌ Ação '{action_name}' não definida para {self.nome}.")
+            return False
 
     def __repr__(self):
         return f"Item:('{self.nome}', Lvl:{self.level}, Peso:{self.peso}, Runas:{self.runas}, Descricao:{self.descricao})"
+
+# --- AÇÕES GENÉRICAS ---
+
+def action_consumable_heal(entity: 'Entity', item: 'Item', im: InventoryManager, am: AttributeManager, heal_amount: int):
+    """
+    Ação genérica para itens que curam HP ao serem consumidos.
+    O valor da cura (heal_amount) é configurado no Item.
+    """
+    if im.remove_item(entity, item.nome, 1): # Tenta remover 1 unidade
+        am.heal_entity(entity, heal_amount)
+        print(f"➕ {entity.nome} consumiu {item.nome} e recuperou {heal_amount} HP.")
+    else:
+        print(f"❌ {item.nome} não pôde ser consumido (item não encontrado).")
+
+
+def action_throw_damage(entity: 'Entity', target: 'Entity', item: 'Item', im: InventoryManager, am: AttributeManager, damage_base: int):
+    """
+    Ação genérica para itens que causam dano ao serem atirados.
+    O valor do dano (damage_base) é configurado no Item.
+    """
+    if not target:
+        print(f"❌ Alvo não especificado para arremessar {item.nome}.")
+        return
+
+    if im.remove_item(entity, item.nome, 1):
+        am.apply_damage(target, damage_base)
+        print(f"🪨 {entity.nome} arremessou {item.nome} em {target.nome} causando {damage_base} de dano base.")
+    else:
+        print(f"Falha ao arremessar {item.nome} (item não encontrado).")
+
 
 #armas iniciais :p
 

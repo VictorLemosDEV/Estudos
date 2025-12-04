@@ -1,6 +1,9 @@
 from typing import Dict, Any, List, Callable, TypeAlias
 from data.entity import Entity
 from managers.attribute_manager import AttributeManager
+from managers.skill_manager import SkillManager
+from data.skills import Skill
+from data.effects import Effect
 
 Cooldowns: TypeAlias = Dict[str, int]
 

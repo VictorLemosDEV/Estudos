@@ -1,6 +1,8 @@
 from typing import Protocol, List, Dict, Callable
 from utils.attribute_calculator import hp_calculator
 from data.racas import IRaca, Raca, RACA_CATALOGO
+from data.items import Item
+from data.skills import Skill
 
 # INTERFACES
 
@@ -99,7 +101,7 @@ class EntityStats():
 #----------------------------------------------
 
 class Entity:
-    def __init__(self, nome: str, raca: IRaca,stats: EntityStats = EntityStats(), level: int = 1, filiacaoLista: List[IFiliacao] = [], inventario = []):
+    def __init__(self, nome: str, raca: IRaca,stats: EntityStats = EntityStats(), level: int = 1, filiacaoLista: List[IFiliacao] = [], inventario = [], abilities: List['Skill'] = []):
         self.initialized = False
         self.id: str = ""
         self.nome = nome
@@ -109,6 +111,8 @@ class Entity:
         self.filiacoes = filiacaoLista
         self.inventario = inventario
         self.equipment: Dict[str, Item | None]
+        
+        self.abilities: List['Skill'] = abilities
         
         
         # Calculando Atributos Dinamicos
@@ -137,6 +141,7 @@ class Entity:
             print(f"{self.nome} foi derrotado!")
             
     def choose_action(self, manager):
+        raise NotImplementedError("Ação deve ser escolhida por Player ou NPC.")
         
         targets = [p for p in manager.participants if p.is_alive() and p is not self]
         
@@ -194,7 +199,10 @@ class Entity:
             
 
 class NPC(Entity):
-    pass
+    def choose_action(self, combat_manager):
+        return combat_manager.npc_choose_ability(self)
 
 class Player(Entity):
-    pass
+   def choose_action(self, combat_manager):
+        # Implementação da escolha do usuário
+        return combat_manager.player_choose_ability(self)
